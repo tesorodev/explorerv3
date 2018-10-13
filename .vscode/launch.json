@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome",
-            "url": "http://127.0.0.1",
+            "url": "http://127.0.0.1/?hash=d296924d67079991eabbfbeac2fd81b41aa1fe5d3162da75255253bc44f4bbe8#blockchain_transaction",
             "webRoot": "${workspaceFolder}",
             "runtimeExecutable": "/usr/bin/chromium-browser",
             "breakOnLoad": true,
@@ -18,7 +18,7 @@
             },
             "runtimeArgs": [
                 "--new-window",
-                "-user-data-dir=\"/${workspaceFolder}/DevProfile\"",
+                "-user-data-dir=${workspaceFolder}/DevProfile",
                 "--remote-debugging-port=9222" ,
                 "--disable-background-networking"
             ]

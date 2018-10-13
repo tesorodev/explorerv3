@@ -15,7 +15,6 @@
     <link href="//fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
 	<script src="/js/config.js"></script>
 	<script src="/js/Chart.bundle.min.js"></script>
-	<script src="/pages/js/home.js"></script>
 
 	<!--<script src="/js/crc32.js"></script>
 	<script src="/js/biginteger.js"></script>
@@ -164,15 +163,15 @@
 		switch (tx)
 		{
 			case 0:
-				return "RCTTypeNull";
+				return "No RingCT";
 			case 1:
-				return "RCTTypeFull";
+				return "Full RingCT";
 			case 2:
-				return "RCTTypeSimple";
+				return "Simple RingCT";
 			case 3:
-				return "RCTTypeFullBulletproof";
+				return "Full Bulletproof";
 			case 4:
-				return "RCTTypeSimpleBulletproof";
+				return "Simple Bulletproof";
 		}
 	}
 

@@ -130,8 +130,8 @@
         updateText('transaction.type', getTransactionType(transaction.rct_signatures.type));
         updateText('transaction.extra', txExtra);
         updateText('transaction.pubkey', txPubKey);
-        if (transaction.vin[0].gen || transaction.vin[0].key.key_offsets.length - 1)
-        updateText('transaction.mixin', '0');
+        if (!transaction.vin[0].key)
+            updateText('transaction.mixin', '0');
         else
             updateText('transaction.mixin', transaction.vin[0].key.key_offsets.length - 1);
 
