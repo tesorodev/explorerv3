@@ -1,0 +1,9 @@
+var api = 'http://127.0.0.1:17566';
+var php_api = '/api/';
+var apiList = ["http://127.0.0.1:17566", "http://127.0.0.1:17566"];
+var blockTargetInterval = 60;
+var coinTotal = 18446744073709551615;
+var coinUnits = 1000000000000;
+var symbol = 'XNV';
+var refreshDelay = 30000;
+var pageDisplay = 30;

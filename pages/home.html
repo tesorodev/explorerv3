@@ -1,0 +1,232 @@
+<style>
+	#mem_pool_rows tr td:first-child {
+		text-align: left;
+	}
+	.value {
+		color: #2780E3;
+		font-weight: 600;
+		display: block;
+		float: right;
+	}
+</style>
+
+<div class="row">
+	<div class="col-sm-12 col-md-12">
+		<div class="panel panel-default" id="network-stats">
+		  <div class="panel-heading">
+			<h3 class="panel-title"><i class="fa fa-tasks fa-fw" aria-hidden="true"></i> Stats</h3>
+		  </div>
+		  <div class="panel-body">
+			<div class="row">
+
+				<div class="col-sm-6 col-md-3">
+					<ul class="list-group" style="margin-bottom: 0px;">
+					
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Blockchain height, total amount of blocks starting from zero."><i class="fa fa-list-ol"></i> Height: <span id="networkHeight" class="value"></span></li>
+				
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="The number of transactions in the network (excluding coinbase, i.e. reward for mined blocks)."><i class="fa fa fa-exchange"></i> Transactions: <span id="networkTransactions" class="value"></span></li>
+						
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Current Base Reward (for last mined block)."><i class="fa fa-certificate"></i> Reward: <span id="currentReward" class="value"></span></li>
+						
+					</ul>
+				</div>
+				<div class="col-sm-6 col-md-3">
+					<ul class="list-group" style="margin-bottom: 0px;">
+					
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Total Nerva supply in circulation."><i class="fa fa-money"></i> Supply: <span id="totalCoins" class="value"></span></li>
+						
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Total number of XNV already emitted."><i class="fa fa-university" aria-hidden="true"></i> Emission: <span id="emissionTotal" class="value"></span></li>
+
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Percentage of XNV already emitted."><i class="fa fa-university" aria-hidden="true"></i> Emission %: <span id="emissionPercent" class="value"></span></li>
+						
+					</ul>
+				</div>
+				<div class="col-sm-6 col-md-3">
+					<ul class="list-group" style="margin-bottom: 0px;">
+					
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Difficulty for next block. Ratio at which at the current hashing speed blocks will be mined with 4 minutes interval."><i class="fa fa-unlock-alt"></i> Next Difficulty: <span id="networkDifficulty" class="value"></span></li>
+				
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Average difficulty by last 30 blocks."><i class="fa fa-lock"></i> Average Difficulty: <span id="avgDifficulty" class="value"></span></li>
+					
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Current estimated network hash rate. Calculated by current difficulty."><i class="fa fa-tachometer"></i> Hash Rate: <span id="networkHashrate" class="value"></span></li>
+						
+					</ul>
+				</div>
+				<div class="col-sm-6 col-md-3">
+					<ul class="list-group" style="margin-bottom: 0px;">
+						
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Average estimated network hash rate. Calculated by average difficulty."><i class="fa fa-tachometer"></i> Avg. Hash Rate: <span id="avgHashrate" class="value"></span></li>
+
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Estimated block solve time at estimated network speed and current difficulty."><i class="fa fa-clock-o" aria-hidden="true"></i> Est. solve time: <span id="blockSolveTime" class="value"></span></li>
+						
+						<li class="list-group-item d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" data-original-title="Average solve time for the recent blocks listed below."><i class="fa fa-clock-o" aria-hidden="true"></i> Avg. solve time: <span id="avgSolveTime" class="value"></span></li>
+					
+					</ul>
+				</div>
+				
+			
+			</div>
+		  </div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		  
+			<h3 class="panel-title"><i class="fa fa-area-chart" aria-hidden="true"></i> Charts
+		  
+			<span class="text-default" data-toggle="tooltip" data-placement="right" data-original-title="Difficulty based on last blocks from the list below. Block size, transactions count. Load more blocks to enlarge chart range."><i class="fa fa-question-circle"></i></span>
+			</h3>
+			
+		  </div>
+		  <div class="panel-body chart-wrapper">
+			<canvas id="difficultyChart" height="210"></canvas>
+		  </div>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+  
+	<h3 class="panel-title"><i class="fa fa-exchange fa-fw" aria-hidden="true"></i> Transaction pool 
+	<span class="text-default" data-toggle="tooltip" data-placement="right" data-original-title="Recent transactions waiting to be included into a block. Once it happens a transaction gets into the blockchain and becomes confirmed."><i class="fa fa-question-circle"></i></span>
+    </h3>
+	
+  </div>
+  <div class="panel-body">
+		
+		<div class="row">
+		  <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+			<div class="panel panel-default tab-panel">
+			  <div class="panel-body">
+				
+				  <ul class="nav nav-pills nav-stacked">
+					<li data-toggle="tooltip" data-placement="bottom" data-original-title="">Count: <span id="mempool_count" class="value"></span></li>
+				  </ul>
+				
+			  </div>
+			</div>
+		  </div>
+		  <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+			<div class="panel panel-default tab-panel">
+			  <div class="panel-body">
+				
+				  <ul class="nav nav-pills nav-stacked">
+					<li data-toggle="tooltip" data-placement="bottom" data-original-title="">Total Amount: <span id="mempool_amount" class="value"></span></li>
+				  </ul>
+				
+			  </div>
+			</div>
+		  </div>
+		  <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+			<div class="panel panel-default tab-panel">
+			  <div class="panel-body">
+				
+				  <ul class="nav nav-pills nav-stacked">
+					<li href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" data-original-title="">Total Fees: <span id="mempool_fees" class="value"></span></a></li>
+				  </ul>
+				
+			  </div>
+			</div>
+		  </div>
+		  <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+		    <div class="panel panel-default tab-panel">
+		      <div class="panel-body">
+			    
+			      <ul class="nav nav-pills nav-stacked">
+				    <li data-toggle="tooltip" data-placement="bottom" data-original-title="">Total Size: <span id="mempool_sizes" class="value"></span></li>
+			      </ul>
+			   
+		      </div>
+			</div>
+		  </div>
+		</div>
+
+
+		<div class="table-responsive">
+			<table class="table table-hover" id="mem_pool_table">
+				<thead>
+				<tr>
+					<th width="30%"><i class="fa fa-clock-o"></i> Date &amp; time</th>
+					<th width="10%"><i class="fa fa-money"></i> Amount</th>
+					<th width="10%"><i class="fa fa-tag"></i> Fee</th>
+					<th width="10%"><i class="fa fa-archive"></i> Size</th>
+					<th width="40%"><i class="fa fa-paw"></i> Hash</th>
+				</tr>
+				</thead>
+				<tbody id="mem_pool_rows">
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+	<h3 class="panel-title"><i class="fa fa-chain fa-fw" aria-hidden="true"></i> Recent blocks</h3>
+  </div>
+  <div class="panel-body">
+	<div class="row">
+		<div class="col-sm-8 col-md-6 col-lg-5">
+			<div class="input-group">
+				<a id="prev-page" href="#" class="btn btn-default input-group-addon"><i class="fa fa-arrow-left" aria-hidden="true"></i> Older</a>
+				<span class="input-group-addon">№</span>
+				<input id="goto-height" type="text" class="form-control" placeholder="Height">
+				<a id="goto-height-go" href="#" class="btn btn-default input-group-addon">Go</a>
+				<a id="next-page" href="#" class="btn btn-default input-group-addon disabled">Newer <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th><i class="fa fa-bars"></i> Height</th>
+				<th><i class="fa fa-clock-o"></i> Date &amp; time</th>
+				<th><i class="fa fa-archive"></i> Size</th>
+				<th><i class="fa fa-paw"></i> Block Hash</th>
+				<th><i class="fa fa-unlock-alt"></i> Difficulty</th>
+				<th><i class="fa fa fa-exchange"></i> Txs</th>
+			</tr>
+			</thead>
+			<tbody id="blocks_rows">
+
+			</tbody>
+		</table>
+	</div>
+
+	<p class="text-center">
+		<button type="button" class="btn btn-default" id="loadMoreBlocks">Load More</button>
+	</p>
+	
+  </div>
+</div>
+<script>
+$('#loadMoreBlocks').click(function() {
+	loadMoreBlocks_Click();
+});
+
+$('#prev-page').click(function(e) {
+	prevPage_Click(e);
+});
+
+$('#next-page').click(function(e) {
+	nextPage_Click(e);
+});
+
+$('#goto-height-go').click(function() {
+	gotoHeightGo_Click();
+});
+
+$('#goto-height').keyup(function (e) {
+    if (e.keyCode === 13)
+		gotoHeightGo_Click();
+});
+</script>
