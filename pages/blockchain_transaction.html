@@ -81,14 +81,13 @@
 				cache: 'false',
 				success: function(data){
                     var tx = data.result[0].json;
-                    var txhash = data.result[0].tx_hash;
+                    var txHash = data.result[0].tx_hash;
                     $.ajax({
                         url: '/api/getblockheaderbyheight.php?height=' + data.result[0].block_height,
                         dataType: 'json',
                         cache: 'false',
                         success: function(data2){
-                            var block = data2.result.block_header;
-                            
+   
                             var txExtra = "";
                             for (var i = 0; i < tx.extra.length; i++)
                             txExtra += tx.extra[i].toString(16).padStart(2, '0');
@@ -98,7 +97,7 @@
                                 dataType: 'json',
                                 cache: 'false',
                                 success: function(data3){
-                                    renderTransaction(txhash, txExtra, data3.result.pubkey, tx, block);
+                                    renderTransaction(txHash, txExtra, data3.result.pubkey, tx, data2.result.block_header);
                                 }
                             });
                         }
@@ -131,7 +130,10 @@
         updateText('transaction.type', getTransactionType(transaction.rct_signatures.type));
         updateText('transaction.extra', txExtra);
         updateText('transaction.pubkey', txPubKey);
-        updateText('transaction.mixin', transaction.vin[0].key.key_offsets.length - 1);
+        if (transaction.vin[0].gen || transaction.vin[0].key.key_offsets.length - 1)
+        updateText('transaction.mixin', '0');
+        else
+            updateText('transaction.mixin', transaction.vin[0].key.key_offsets.length - 1);
 
 		if (!block.hash){
 		    $('#tx_block').hide();
