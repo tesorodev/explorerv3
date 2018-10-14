@@ -496,9 +496,9 @@ function getPoolTransactions()
                     txsRows.removeChild(txsRows.firstChild);
                 }
             }
-            for (var i = 0; i < data.result.length; i++)
+            for (var i = 0; i < data.transactions.length; i++)
             {
-                var tx = data.result[i];
+                var tx = data.transactions[i];
 
                 var row = document.createElement('tr');
                 var columns =
