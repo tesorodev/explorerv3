@@ -245,9 +245,9 @@
     var xhrPageLoading;
     function routePage(loadedCallback) {
 
-        if (currentPage) currentPage.destroy();
+		if (currentPage) currentPage.destroy();
         $('#page').html('');
-        $('#loading').show();
+		$('#loading').show();
 
         if (xhrPageLoading)
             xhrPageLoading.abort();
@@ -377,7 +377,7 @@
 					
 			<div class="nav col-md-6 navbar-right explorer-search">
 				<div class="input-group">
-					<input class="form-control" placeholder="Search by block height / hash, transaction hash, payment id" id="txt_search">
+					<input class="form-control" placeholder="Search by block height, block hash or transaction hash" id="txt_search">
 					<span class="input-group-btn"><button class="btn btn-default" type="button" id="btn_search">
 						<span><i class="fa fa-search"></i> Search</span>
 					</button></span>
@@ -406,12 +406,13 @@ function GetSearchBlockbyHeight(){
             dataType: 'json',
             cache: 'false',
             success: function(data){
-				if(data.result){
+				if(data.result)
+				{
 					block = data.result.block_header;
 					window.location.href = getBlockchainUrl(block.hash);
-				} else if(data.error) {
-					wrongSearchAlert();
-				}
+					alertError("Found");
+				} else
+					alertError("getblockheaderbyheight.php");
             }
         });
 }
@@ -423,51 +424,50 @@ var block, xhrGetSearchBlock;
             url: '/api/getblockbyhash.php?hash=' + text,
             dataType: 'json',
             cache: 'false',
-			success: function(data){
-				if(data.result){
-					block = data.result;
-					sessionStorage.setItem('searchBlock', JSON.stringify(block));
-					window.location.href = getBlockchainUrl(block.hash);
-				} else if(data.error) {
-					$.ajax({
+			success: function(data) {
+				block = data.result;
+				sessionStorage.setItem('searchBlock', JSON.stringify(block));
+				window.location.href = getBlockchainUrl(block.hash);
+			},
+			error: function(err) {
+				$.ajax({
 						url: '/api/gettransactions.php?hash[]=' + text,
 						dataType: 'json',
 						cache: 'false',
-						success: function(data){
-							if(data.result)
-							{
-								sessionStorage.setItem('searchTransaction', JSON.stringify(data.result));
+						success: function(data2){
+							sessionStorage.setItem('searchTransaction', JSON.stringify(data2.result));
 								window.location.href = transactionExplorer.replace('{id}', text);
-							}
+						},
+						error: function(err2) {
+							alertError("Search failed");
 						}
 					});
-				}
 			}	
 		});
 }
 
 if ( text.length < 64 ) {
 	GetSearchBlockbyHeight();
-} else// if ( text.length == 64 ) {
+} else if ( text.length == 64 ) {
 	GetSearchBlock();
-//} else {
-//	wrongSearchAlert();
-//}
+} else {
+	alertError("Invalid search term");
+}
 
 e.preventDefault();
 
 });
 
-function wrongSearchAlert() {
+function alertError(message) {
 	$('#page').after(
 		'<div class="alert alert-danger alert-dismissable fade in" style="position: fixed; right: 50px; top: 50px;">'+
-		'<button type="button" class="close" ' + 
+		'<button id="popup_alert" type="button" class="close" ' + 
 		'data-dismiss="alert" aria-hidden="true">' + 
 		'&times;' + 
 		'</button>' + 
-		'<strong>Wrong search query!</strong><br /> Please enter block height, block hash or transaction hash' + 
+		'<strong>' + message + '</strong><br />' +
 		'</div>');
-}
+	}
 
 $('#txt_search').keyup(function(e){
         if(e.keyCode === 13)

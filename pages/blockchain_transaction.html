@@ -71,41 +71,45 @@
 
     function getTransaction(){
         if (xhrGetTransaction) xhrGetTransaction.abort();
-		var searchTx = $.parseJSON(sessionStorage.getItem('searchTransaction'));
+		var searchTx = $.parseJSON(sessionStorage.getItem('searchTransaction'))[0];
 		if (searchTx) {
-			renderTransaction(searchTx);
+            getTransactionData(searchTx, searchTx.tx_hash);
 		} else {
 			xhrGetTransaction = $.ajax({
 				url: '/api/gettransactions.php?hash[]=' + urlParam('hash'),
 				dataType: 'json',
 				cache: 'false',
 				success: function(data){
-                    var tx = data.result[0].json;
+                    var tx = data.result[0];
                     var txHash = data.result[0].tx_hash;
-                    $.ajax({
-                        url: '/api/getblockheaderbyheight.php?height=' + data.result[0].block_height,
-                        dataType: 'json',
-                        cache: 'false',
-                        success: function(data2){
-   
-                            var txExtra = "";
-                            for (var i = 0; i < tx.extra.length; i++)
-                            txExtra += tx.extra[i].toString(16).padStart(2, '0');
-
-                            $.ajax({
-                                url: '/api/gettxpubkey.php?extra=' + txExtra,
-                                dataType: 'json',
-                                cache: 'false',
-                                success: function(data3){
-                                    renderTransaction(txHash, txExtra, data3.result.pubkey, tx, data2.result.block_header);
-                                }
-                            });
-                        }
-                    });
+                    getTransactionData(tx, txHash);
 				}
             });
 		}
 		sessionStorage.removeItem('searchTransaction');
+    }
+
+    function getTransactionData(tx, txHash)
+    {
+        $.ajax({
+            url: '/api/getblockheaderbyheight.php?height=' + tx.block_height,
+            dataType: 'json',
+            cache: 'false',
+            success: function(data2) {
+                var txExtra = "";
+                for (var i = 0; i < tx.json.extra.length; i++)
+                    txExtra += tx.json.extra[i].toString(16).padStart(2, '0');
+
+                $.ajax({
+                    url: '/api/gettxpubkey.php?extra=' + txExtra,
+                    dataType: 'json',
+                    cache: 'false',
+                    success: function(data3){
+                        renderTransaction(txHash, txExtra, data3.result.pubkey, tx, data2.result.block_header);
+                    }
+                });
+             }
+        });
     }
 
     function renderTransaction(txHash, txExtra, txPubKey, transaction, block)
@@ -117,23 +121,23 @@
 			$(".transaction-timeago").timeago('update', new Date(block.timestamp * 1000).toISOString());
 		}
 
-        if (transaction.rct_signatures.txnFee)
-            updateText('transaction.fee', getReadableCoins(transaction.rct_signatures.txnFee));
+        if (transaction.json.rct_signatures.txnFee)
+            updateText('transaction.fee', getReadableCoins(transaction.json.rct_signatures.txnFee));
         else
             updateText('transaction.fee', getReadableCoins(0, 2));
 
         var outputTotal = 0;
-        for (var i = 0; i < transaction.vout.length; i++)
-            outputTotal += transaction.vout[i].amount;
+        for (var i = 0; i < transaction.json.vout.length; i++)
+            outputTotal += transaction.json.vout[i].amount;
         
         updateText('transaction.amount_out', getReadableCoins(outputTotal, 4));
-        updateText('transaction.type', getTransactionType(transaction.rct_signatures.type));
+        updateText('transaction.type', getTransactionType(transaction.json.rct_signatures.type));
         updateText('transaction.extra', txExtra);
         updateText('transaction.pubkey', txPubKey);
-        if (!transaction.vin[0].key)
+        if (!transaction.json.vin[0].key)
             updateText('transaction.mixin', '0');
         else
-            updateText('transaction.mixin', transaction.vin[0].key.key_offsets.length - 1);
+            updateText('transaction.mixin', transaction.json.vin[0].key.key_offsets.length - 1);
 
 		if (!block.hash){
 		    $('#tx_block').hide();
@@ -145,8 +149,8 @@
         updateText('block.height', block.height);
         updateText('block.timestamp', formatDate(block.timestamp));
 				
-        renderInputs(transaction.vin);
-        renderOutputs(transaction.vout);
+        renderInputs(transaction.json.vin);
+        renderOutputs(transaction.json.vout);
 	}
 
     function getInputCells(input){
