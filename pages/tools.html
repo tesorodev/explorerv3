@@ -1,0 +1,95 @@
+<style>
+	h2 #transactionHash {
+		font-size: 20px;
+		color: #222;
+	}
+</style>
+
+<h2><i class="fa fa-wrench fa-fw" aria-hidden="true"></i> NERVA Tools</h2>
+
+<div class="well bs-component">
+	<form class="form-horizontal" id="validate_address_form">
+	    <fieldset>
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="public_address">Validate Address</label>
+					<input class="form-control" placeholder="NERVA address to validate" id="public_address">
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="form-group">
+					<button class="btn btn-default" type="button" id="validate_address">
+						<span class="fa fa-search"></span> Validate
+					</button>
+				</div>
+			</div>
+	    </fieldset>
+	</form>
+</div>
+<script src="/js/cn_helper.js"></script>
+<script>
+	var publicAddress = $("#public_address");
+
+    currentPage = {
+        destroy: function(){
+        },
+        init: function(){
+        },
+        update: function(){
+        }
+	};
+
+	$("#validate_address").click(function() {
+		$("#popup_alert").click(); 
+
+		if(!publicAddress.val()) {
+			alertError("Fill all fields!");
+			return;
+		}
+		
+		var a = publicAddress.val();
+
+		try {
+			var res = decode_address(a);
+			if (!res)
+				alertError('Could not decode address');
+			else
+			{
+				var msg = 'Address is valid!<br />' +
+				'Type:' + res.type.address_type + '<br />' +
+				'View:' + res.view + '<br />' +
+				'Spend:' + res.spend + '<br />';
+
+				if (res.type.address_type == address_type.integrated)
+					msg += 'PayID:' + res.intPaymentId + '<br />';
+
+				alertSuccess(msg);
+			}
+		}
+		catch (e) {
+			alertError("Could not decode address:<br />" + e);
+		}
+	});
+	
+	function alertError(message) {
+	$('#page').after(
+		'<div class="alert alert-danger alert-dismissable fade in" style="position: fixed; right: 50px; top: 50px;">'+
+		'<button id="popup_alert" type="button" class="close" ' + 
+		'data-dismiss="alert" aria-hidden="true">' + 
+		'&times;' + 
+		'</button>' + 
+		'<strong>' + message + '</strong><br />' +
+		'</div>');
+	}
+
+	function alertSuccess(message) {
+	$('#page').after(
+		'<div class="alert alert-success alert-dismissable fade in" style="position: fixed; right: 50px; top: 50px;">'+
+		'<button id="popup_alert" type="button" class="close" ' + 
+		'data-dismiss="alert" aria-hidden="true">' + 
+		'&times;' + 
+		'</button>' + 
+		'<strong>' + message + '</strong><br />' +
+		'</div>');
+	}
+</script>
