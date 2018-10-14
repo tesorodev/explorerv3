@@ -15,7 +15,7 @@ var CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 0x3800;
 var CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 0x7081;
 var CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 0x1080;
 
-function encode_varint(i)
+function encodeVarint(i)
 {
     i = new JSBigInt(i);
     var out = '';
@@ -29,13 +29,13 @@ function encode_varint(i)
     return out;
 }
 
-function valid_hex(hex)
+function valiHex(hex)
 {
     var exp = new RegExp("[0-9a-fA-F]{" + hex.length + "}");
     return exp.test(hex);
 }
 
-function hextobin(hex)
+function hexToBin(hex)
 {
     if (hex.length % 2 !== 0) throw "Hex string has invalid length!";
     var res = new Uint8Array(hex.length / 2);
@@ -45,12 +45,12 @@ function hextobin(hex)
     return res;
 }
 
-function cn_fast_hash(input, inlen)
+function cnFastHash(input, inlen)
 {
     if (input.length % 2 !== 0 || !this.valid_hex(input))
         throw "Input invalid";
 
-    var bin = hextobin(input);
+    var bin = hexToBin(input);
     var result = keccak_256(bin)
     return result;
 }
@@ -69,7 +69,7 @@ function getAddressType(address)
     var prefix;
 
     //Check if it is a standard address
-    expectedPrefix = encode_varint(CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
+    expectedPrefix = encodeVarint(CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
     prefix = dec.slice(0, expectedPrefix.length);
 
     if (prefix == expectedPrefix)
@@ -80,7 +80,7 @@ function getAddressType(address)
         };
     
     //Check integrated address
-    expectedPrefix = encode_varint(CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX);
+    expectedPrefix = encodeVarint(CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX);
     prefix = dec.slice(0, expectedPrefix.length);
     
     if (prefix == expectedPrefix)
@@ -91,7 +91,7 @@ function getAddressType(address)
         };
 
     //check subaddress
-    expectedPrefix = encode_varint(CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX);
+    expectedPrefix = encodeVarint(CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX);
     prefix = dec.slice(0, expectedPrefix.length);
     
     if (prefix == expectedPrefix)
@@ -108,32 +108,28 @@ function getAddressType(address)
     };
 }
 
-function decode_address(address)
+function decodeAddress(address)
 {
     var at = getAddressType(address);
 
     if (at.address_type == address_type.unknown)
         throw "Could not determine the type of address";
 
-    var dec = cnBase58.decode(address);
+    var dec = cnBase58.decode(address).slice(at.prefix_length);
 
-    dec = dec.slice(at.prefix_length);
     var spend = dec.slice(0, 64);
     var view = dec.slice(64, 128);
+
     if (at.address_type == address_type.integrated)
     {
         var intPaymentId = dec.slice(128, 128 + (INTEGRATED_ID_SIZE * 2));
         var checksum = dec.slice(128 + (INTEGRATED_ID_SIZE * 2), 128 + (INTEGRATED_ID_SIZE * 2) + (ADDRESS_CHECKSUM_SIZE * 2));
-        var expectedChecksum = cn_fast_hash(at.prefix + spend + view + intPaymentId).slice(0, ADDRESS_CHECKSUM_SIZE * 2);
-    }
-    else if (at.address_type == address_type.standard) {
-        var checksum = dec.slice(128, 128 + (ADDRESS_CHECKSUM_SIZE * 2));
-        var expectedChecksum = cn_fast_hash(at.prefix + spend + view).slice(0, ADDRESS_CHECKSUM_SIZE * 2);
+        var expectedChecksum = cnFastHash(at.prefix + spend + view + intPaymentId).slice(0, ADDRESS_CHECKSUM_SIZE * 2);
     }
     else {
         // if its not regular address, nor integrated, than it must be subaddress
         var checksum = dec.slice(128, 128 + (ADDRESS_CHECKSUM_SIZE * 2));
-        var expectedChecksum = cn_fast_hash(at.prefix + spend + view).slice(0, ADDRESS_CHECKSUM_SIZE * 2);
+        var expectedChecksum = cnFastHash(at.prefix + spend + view).slice(0, ADDRESS_CHECKSUM_SIZE * 2);
     }
 
     if (checksum !== expectedChecksum)

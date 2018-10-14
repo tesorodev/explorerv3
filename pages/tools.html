@@ -32,6 +32,7 @@
 
     currentPage = {
         destroy: function(){
+			$("#popup_alert").click(); 
         },
         init: function(){
         },
@@ -58,10 +59,10 @@
 				var msg = 'Address is valid!<br />' +
 				'Type:' + res.type.address_type + '<br />' +
 				'View:' + res.view + '<br />' +
-				'Spend:' + res.spend + '<br />';
+				'Spend:' + res.spend;
 
 				if (res.type.address_type == address_type.integrated)
-					msg += 'PayID:' + res.intPaymentId + '<br />';
+					msg += '<br />PayID:' + res.intPaymentId;
 
 				alertSuccess(msg);
 			}
