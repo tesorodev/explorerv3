@@ -491,13 +491,13 @@ function getPoolTransactions()
         {
             var json = JSON.parse(data);
             var transactions = json.transactions;
+            transactions.sort(function(a, b){return a.receive_time - b.receive_time});
+
             var txsRows = document.getElementById('mem_pool_rows');
             if (txsRows)       
-            {
-                while (txsRows.firstChild) {
+                while (txsRows.firstChild)
                     txsRows.removeChild(txsRows.firstChild);
-                }
-            }
+
             for (var i = 0; i < transactions.length; i++)
             {
                 var tx = transactions[i];
