@@ -98,63 +98,12 @@
 	
   </div>
   <div class="panel-body">
-		
-		<div class="row">
-		  <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
-			<div class="panel tab-panel">
-			  <div class="panel-body">
-				
-				  <ul class="nav nav-pills nav-stacked">
-					<li data-toggle="tooltip" data-placement="bottom" data-original-title="">Count: <span id="mempool_count" class="value"></span></li>
-				  </ul>
-				
-			  </div>
-			</div>
-		  </div>
-		  <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
-			<div class="panel tab-panel">
-			  <div class="panel-body">
-				
-				  <ul class="nav nav-pills nav-stacked">
-					<li data-toggle="tooltip" data-placement="bottom" data-original-title="">Total Amount: <span id="mempool_amount" class="value"></span></li>
-				  </ul>
-				
-			  </div>
-			</div>
-		  </div>
-		  <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
-			<div class="panel tab-panel">
-			  <div class="panel-body">
-				
-				  <ul class="nav nav-pills nav-stacked">
-					<li href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" data-original-title="">Total Fees: <span id="mempool_fees" class="value"></span></a></li>
-				  </ul>
-				
-			  </div>
-			</div>
-		  </div>
-		  <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
-		    <div class="panel tab-panel">
-		      <div class="panel-body">
-			    
-			      <ul class="nav nav-pills nav-stacked">
-				    <li data-toggle="tooltip" data-placement="bottom" data-original-title="">Total Size: <span id="mempool_sizes" class="value"></span></li>
-			      </ul>
-			   
-		      </div>
-			</div>
-		  </div>
-		</div>
-
 
 		<div class="table-responsive">
 			<table class="table table-hover" id="mem_pool_table">
 				<thead>
 				<tr>
-					<th width="30%"><i class="fa fa-clock-o"></i> Date &amp; time</th>
-					<th width="10%"><i class="fa fa-money"></i> Amount</th>
-					<th width="10%"><i class="fa fa-tag"></i> Fee</th>
-					<th width="10%"><i class="fa fa-archive"></i> Size</th>
+					<th width="30%"><i class="fa fa-clock-o"></i> Date &amp; Time</th>
 					<th width="40%"><i class="fa fa-paw"></i> Hash</th>
 				</tr>
 				</thead>
@@ -538,43 +487,26 @@ function getPoolTransactions()
     var xhrGetPool = $.ajax({
         url: '/api/gettransactionpool.php',
         cache: 'false',
-        success: function (newdata) {
-            if (typeof newdata.result !== "undefined") {
-                var data = newdata.result.mempool;
-                var totalAmount = 0;
-                var totalFee = 0;
-                var totalSize = 0;
-                var txcount = 0;
-                var txsRows = document.getElementById('mem_pool_rows');
-                if (txsRows) {
-                    while (txsRows.firstChild) {
-                        txsRows.removeChild(txsRows.firstChild);
-                    }
+        success: function (data)
+        {
+            var txsRows = document.getElementById('mem_pool_rows');
+            if (txsRows)       
+            {
+                while (txsRows.firstChild) {
+                    txsRows.removeChild(txsRows.firstChild);
                 }
-                for (var i = 0; i < data.length; i++) {
-                    var tx = data[i];
+            }
+            for (var i = 0; i < data.result.length; i++)
+            {
+                var tx = data.result[i];
 
-                    var row = document.createElement('tr');
-                    var columns =
-                        '<td>' + formatDate(tx.receiveTime) + ' (<span class="mtx-ago"></span>)' + '</td>' +
-                        '<td>' + getReadableCoins(tx.amount_out, 4, true) + '</td>' +
-                        '<td>' + getReadableCoins(tx.fee, 4, true) + '</td>' +
-                        '<td>' + formatBytes(parseInt(tx.size)) + '</td>' +
-                        '<td>' + formatPaymentLink(tx.hash) + '</td>';
-                    row.innerHTML = columns;
-                    $(txsRows).append(row);
-                    $(row).find('.mtx-ago').timeago('update', new Date(tx.receiveTime * 1000).toISOString());
-
-                    txcount = txcount + 1;
-                    totalAmount = tx.amount_out + totalAmount;
-                    totalFee = totalFee + tx.fee;
-                    totalSize = totalSize + tx.size;
-
-                }
-                updateText('mempool_count', txcount);
-                updateText('mempool_amount', getReadableCoins(totalAmount, 4));
-                updateText('mempool_fees', getReadableCoins(totalFee, 8));
-                updateText('mempool_sizes', formatBytes(parseInt(totalSize)));
+                var row = document.createElement('tr');
+                var columns =
+                    '<td>' + formatDate(tx.receive_time) + ' (<span class="mtx-ago"></span>)' + '</td>' +
+                    '<td>' + formatPaymentLink(tx.id_hash) + '</td>';
+                row.innerHTML = columns;
+                $(txsRows).append(row);
+                $(row).find('.mtx-ago').timeago('update', new Date(tx.receive_time * 1000).toISOString());
             }
         }
     });
