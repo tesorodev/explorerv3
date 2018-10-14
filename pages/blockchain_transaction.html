@@ -54,7 +54,6 @@
         </tbody>
     </table>
 </div>
-
 <script>
     var xhrGetTransaction, transaction;
 
@@ -71,9 +70,9 @@
 
     function getTransaction(){
         if (xhrGetTransaction) xhrGetTransaction.abort();
-		var searchTx = $.parseJSON(sessionStorage.getItem('searchTransaction'))[0];
+		var searchTx = $.parseJSON(sessionStorage.getItem('searchTransaction'));
 		if (searchTx) {
-            getTransactionData(searchTx, searchTx.tx_hash);
+            getTransactionData(searchTx[0], searchTx[0].tx_hash);
 		} else {
 			xhrGetTransaction = $.ajax({
 				url: '/api/gettransactions.php?hash[]=' + urlParam('hash'),
