@@ -489,6 +489,8 @@ function getPoolTransactions()
         cache: 'false',
         success: function (data)
         {
+            var json = JSON.parse(data);
+            var transactions = json.transactions;
             var txsRows = document.getElementById('mem_pool_rows');
             if (txsRows)       
             {
@@ -496,9 +498,9 @@ function getPoolTransactions()
                     txsRows.removeChild(txsRows.firstChild);
                 }
             }
-            for (var i = 0; i < data.transactions.length; i++)
+            for (var i = 0; i < transactions.length; i++)
             {
-                var tx = data.transactions[i];
+                var tx = transactions[i];
 
                 var row = document.createElement('tr');
                 var columns =
