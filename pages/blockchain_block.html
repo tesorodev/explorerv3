@@ -73,7 +73,7 @@
 		updateText('block.height', data.block_header.height);
 		updateText('block.depth', data.block_header.depth);
 		updateText('block.timestamp', formatDate(data.block_header.timestamp));
-		updateText('block.version', data.block_header.major_version + '.' + data.block_header.minor_version);
+		updateText('block.version', data.block_header.major_version);
 		updateText('block.difficulty', data.block_header.difficulty);
 		updateText('block.transactions', data.block_header.num_txes);
 		updateText('block.blockSize', formatBytes(parseInt(data.block_header.block_size)));
