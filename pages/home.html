@@ -187,10 +187,10 @@ currentPage = {
     },
     update: function () {
         renderLastBlock();
-        updateText('networkHeight', lastStats.height.toString());
-        updateText('networkTransactions', lastStats.tx_count.toString());
+        updateText('networkHeight', lastStats.height);
+        updateText('networkTransactions', lastStats.tx_count);
         updateText('networkHashrate', getReadableHashRateString(lastStats.difficulty / blockTargetInterval));
-        updateText('networkDifficulty', getReadableDifficultyString(lastStats.difficulty, 2).toString());
+        updateText('networkDifficulty', getReadableDifficultyString(lastStats.difficulty, 2));
         $("time.timeago").timeago();
         getPoolTransactions();
         var currHeight = $('#blocks_rows').children().first().data('height');
@@ -460,7 +460,7 @@ function calcAvgHashRate()
     var avgDiff = Math.round(sum / Difficulties.length);
     var avgHashRate = avgDiff / blockTargetInterval;
 
-    updateText('avgDifficulty', getReadableDifficultyString(avgDiff, 2).toString());
+    updateText('avgDifficulty', getReadableDifficultyString(avgDiff, 2));
     updateText('avgHashrate', getReadableHashRateString(avgDiff / blockTargetInterval));
     updateText('blockSolveTime', getReadableTime(lastStats.difficulty / avgHashRate));
 }
