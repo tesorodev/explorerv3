@@ -211,14 +211,14 @@ currentPage = {
 
 function renderLastBlock() {
     $.ajax({
-        url: '/api/getlastblockheader.php',
+        url: './api/getlastblockheader.php',
         method: "GET",
         dataType: 'json',
         cache: 'false',
         success: function (data) {
             lastBlockReward = data.result.block_header.reward;
             $.ajax({
-                url: '/api/getgeneratedcoins.php',
+                url: './api/getgeneratedcoins.php',
                 dataType: 'json',
                 cache: 'false',
                 success: function (data) {
@@ -239,7 +239,7 @@ function loadMoreBlocks_Click()
     if (xhrGetBlocks) xhrGetBlocks.abort();
     height = $('#blocks_rows').children().last().data('height')
     xhrGetBlocks = $.ajax({
-        url: '/api/getblockheadersrange.php?start=' + (height - pageDisplay) + '&end=' + height,
+        url: './api/getblockheadersrange.php?start=' + (height - pageDisplay) + '&end=' + height,
         dataType: 'json',
         cache: 'false',
         success: function (data) {
@@ -273,7 +273,7 @@ function prevPage_Click(e)
     $('#next-page').removeClass('disabled');
 
     xhrGetBlocks = $.ajax({
-        url: '/api/getblockheadersrange.php?start=' + startHeight + '&end=' + endHeight,
+        url: './api/getblockheadersrange.php?start=' + startHeight + '&end=' + endHeight,
         dataType: 'json',
         cache: 'false',
         success: function (data) {
@@ -311,7 +311,7 @@ function nextPage_Click(e)
     $('#prev-page').removeClass('disabled');
 
     xhrGetBlocks = $.ajax({
-        url: '/api/getblockheadersrange.php?start=' + startHeight + '&end=' + endHeight,
+        url: './api/getblockheadersrange.php?start=' + startHeight + '&end=' + endHeight,
         dataType: 'json',
         cache: 'false',
         success: function (data) {
@@ -367,7 +367,7 @@ function renderInitialBlocks() {
         $('#next-page').removeClass('disabled');
 
     xhrGetBlocks = $.ajax({
-        url: '/api/getblockheadersrange.php?start=' + startHeight + '&end=' + endHeight,
+        url: './api/getblockheadersrange.php?start=' + startHeight + '&end=' + endHeight,
         dataType: 'json',
         cache: 'false',
         success: function (data) {
@@ -484,7 +484,7 @@ function calcAvgSolveTime()
 function getPoolTransactions()
 {
     var xhrGetPool = $.ajax({
-        url: '/api/gettransactionpool.php',
+        url: './api/gettransactionpool.php',
         cache: 'false',
         success: function (data)
         {

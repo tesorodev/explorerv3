@@ -9,32 +9,32 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.6.3/jquery.timeago.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js"></script>
-    <link href="/css/themes/new/style.css" rel="stylesheet" id="theme_link">
+    <link href="./css/themes/new/style.css" rel="stylesheet" id="theme_link">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
-	<script src="/js/crc32.js"></script>
-	<script src="/js/biginteger.js"></script>
-	<script src="/js/config.js"></script>
-	<script src="/js/crypto.js"></script>
-	<script src="/js/nacl-fast-cn.js"></script>
-	<script src="/js/base58.js"></script>
-	<script src="/js/sha3.js"></script>
-	<script src="/js/Chart.bundle.min.js"></script>
+	<script src="./js/crc32.js"></script>
+	<script src="./js/biginteger.js"></script>
+	<script src="./js/config.js"></script>
+	<script src="./js/crypto.js"></script>
+	<script src="./js/nacl-fast-cn.js"></script>
+	<script src="./js/base58.js"></script>
+	<script src="./js/sha3.js"></script>
+	<script src="./js/Chart.bundle.min.js"></script>
 </head>
 <body>
 <script>
 
-	var blockchainExplorer 	= "/?hash={id}#blockchain_block";
-	var transactionExplorer = "/?hash={id}#blockchain_transaction";
-	var paymentIdExplorer 	= "/?hash={id}#blockchain_payment_id";
+	var blockchainExplorer 	= "./?hash={id}#blockchain_block";
+	var transactionExplorer = "./?hash={id}#blockchain_transaction";
+	var paymentIdExplorer 	= "./?hash={id}#blockchain_payment_id";
 	
 	var style_cookie_name = "style";
 	var style_cookie_duration = 365;
 	var style_domain = window.location.hostname;
 	
 	$(function(){
-		$('.theme-switch[rel="/css/themes/new/style.css"]').hide();
+		$('.theme-switch[rel="./css/themes/new/style.css"]').hide();
 		set_style_from_cookie();
 		
 		$('.theme-switch').click(function() {
@@ -203,7 +203,7 @@
 
     function fetchLiveStats() {
         $.ajax({
-            url: "/api/getinfo.php",
+            url: "./api/getinfo.php",
             dataType: 'json',
             cache: 'false'
         }).done(function(data, success){
@@ -277,7 +277,7 @@
 
 	function getinfo() {
 		$.ajax({
-			url: "/api/getinfo.php",
+			url: "./api/getinfo.php",
 			timeout: 1500 //in milliseconds
 		})
 		.done(function (data) {
@@ -287,11 +287,6 @@
 				lastStats = data;
 			}
 			routePage(fetchLiveStats);
-		})
-		.fail(function () {
-			apiList.push(api);
-			api = apiList.shift();
-			getinfo();
 		});
 	}
 	
@@ -379,8 +374,8 @@
                     <i class="fa fa-wrench" aria-hidden="true"></i> Tools
                 </a></li>
 			<!--
-				<button rel="/css/themes/dark/style.css" class="btn btn-default theme-switch" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Switch to Night Mode"><i class="fa fa-moon-o"></i></button>
-				<button rel="/css/themes/white/style.css" class="btn btn-default theme-switch" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Switch to Day Mode"><i class="fa fa-sun-o"></i></button>
+				<button rel="./css/themes/dark/style.css" class="btn btn-default theme-switch" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Switch to Night Mode"><i class="fa fa-moon-o"></i></button>
+				<button rel="./css/themes/white/style.css" class="btn btn-default theme-switch" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Switch to Day Mode"><i class="fa fa-sun-o"></i></button>
 			-->
 	<!-- //-->			
 
@@ -424,7 +419,7 @@ function GetSearchBlockbyHeight(){
     if (xhrGetSearchBlockbyHeight) xhrGetSearchBlockbyHeight.abort();
 	  
 			xhrGetSearchBlockbyHeight = $.ajax({
-            url: '/api/getblockheaderbyheight.php?height=' + text,
+            url: './api/getblockheaderbyheight.php?height=' + text,
             dataType: 'json',
             cache: 'false',
             success: function(data){
@@ -441,7 +436,7 @@ function GetSearchBlock(){
 var block, xhrGetSearchBlock;
 	if (xhrGetSearchBlock) xhrGetSearchBlock.abort();
 		xhrGetSearchBlock = $.ajax({
-            url: '/api/getblockbyhash.php?hash=' + text,
+            url: './api/getblockbyhash.php?hash=' + text,
             dataType: 'json',
             cache: 'false',
 			success: function(data) {
@@ -451,7 +446,7 @@ var block, xhrGetSearchBlock;
 			},
 			error: function(err) {
 				$.ajax({
-						url: '/api/gettransactions.php?hash[]=' + text,
+						url: './api/gettransactions.php?hash[]=' + text,
 						dataType: 'json',
 						cache: 'false',
 						success: function(data2){

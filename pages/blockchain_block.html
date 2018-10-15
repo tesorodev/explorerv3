@@ -54,7 +54,7 @@
 			renderBlock(searchBlk);
 		} else {
 			xhrGetBlock = $.ajax({
-				url: '/api/getblockbyhash.php?hash=' + urlParam('hash'),
+				url: './api/getblockbyhash.php?hash=' + urlParam('hash'),
 				dataType: 'json',
 				cache: 'false',
 				success: function(data){
@@ -86,7 +86,7 @@
 			hashes += '&hash[]=' + data.tx_hashes[i];
 
 		$.ajax({
-			url: '/api/gettransactions.php?' + hashes,
+			url: './api/gettransactions.php?' + hashes,
 			dataType: 'json',
 			cache: 'false',
 			success: function(data2){
@@ -99,7 +99,7 @@
 		makePrevBlockLink(data.block_header.prev_hash);
 				
 		$.ajax({
-			url: '/api/getblockheaderbyheight.php?height=' + (data.block_header.height + 1),
+			url: './api/getblockheaderbyheight.php?height=' + (data.block_header.height + 1),
 			dataType: 'json',
 			cache: 'false',
 			success: function(data3){

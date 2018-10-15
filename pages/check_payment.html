@@ -116,7 +116,7 @@
 <p>SPEND PROOF: Provide your <em>Private Transaction Key</em>. You can obtain a transaction key with the nerva-wallet-cli command <em>get_tx_key</em></p>
 <p>DECODE OUTPUTS: Provide your <em>Private View Key</em>.</p>
 <p>WARNING: Private keys are sent to the server for decoding.</p>
-<script src="/js/cn_helper.js"></script>
+<script src="./js/cn_helper.js"></script>
 <script>
     var xhrGetTransaction, xhrCheckTransactionByKey, xhrCheckTransactionByViewKey, transaction;
 	var transactionHash = $("#transaction_hash");
@@ -155,7 +155,7 @@
 	function getTransaction()
 	{
         xhrGetTransaction = $.ajax({
-			url: '/api/gettransactions.php?hash[]=' + transactionHash.val().trim(),
+			url: './api/gettransactions.php?hash[]=' + transactionHash.val().trim(),
 			dataType: 'json',
 			cache: 'false',
 			success: function(data){
@@ -169,7 +169,7 @@
 	function getTransactionData(tx, txHash)
     {
         $.ajax({
-            url: '/api/getblockheaderbyheight.php?height=' + tx.block_height,
+            url: './api/getblockheaderbyheight.php?height=' + tx.block_height,
             dataType: 'json',
             cache: 'false',
             success: function(data2) {
@@ -178,7 +178,7 @@
                     txExtra += tx.json.extra[i].toString(16).padStart(2, '0');
 
                 $.ajax({
-                    url: '/api/gettxpubkey.php?extra=' + txExtra,
+                    url: './api/gettxpubkey.php?extra=' + txExtra,
                     dataType: 'json',
                     cache: 'false',
                     success: function(data3){

@@ -75,7 +75,7 @@
             getTransactionData(searchTx[0], searchTx[0].tx_hash);
 		} else {
 			xhrGetTransaction = $.ajax({
-				url: '/api/gettransactions.php?hash[]=' + urlParam('hash'),
+				url: './api/gettransactions.php?hash[]=' + urlParam('hash'),
 				dataType: 'json',
 				cache: 'false',
 				success: function(data){
@@ -91,7 +91,7 @@
     function getTransactionData(tx, txHash)
     {
         $.ajax({
-            url: '/api/getblockheaderbyheight.php?height=' + tx.block_height,
+            url: './api/getblockheaderbyheight.php?height=' + tx.block_height,
             dataType: 'json',
             cache: 'false',
             success: function(data2) {
@@ -100,7 +100,7 @@
                     txExtra += tx.json.extra[i].toString(16).padStart(2, '0');
 
                 $.ajax({
-                    url: '/api/gettxpubkey.php?extra=' + txExtra,
+                    url: './api/gettxpubkey.php?extra=' + txExtra,
                     dataType: 'json',
                     cache: 'false',
                     success: function(data3){
