@@ -126,7 +126,6 @@
 
     currentPage = {
         destroy: function(){
-			$("#popup_alert").click(); 
 			if (xhrGetTransaction) xhrGetTransaction.abort();
 			if (xhrCheckTransactionByKey) xhrCheckTransactionByKey.abort();
 			if (xhrCheckTransactionByViewKey) xhrCheckTransactionByViewKey.abort();
@@ -428,26 +427,4 @@
 	$(function() {
 		$('[data-toggle="tooltip"]').tooltip();
 	});
-	
-	function alertError(message) {
-	$('#page').after(
-		'<div class="alert alert-danger alert-dismissable fade in" style="position: fixed; right: 50px; top: 50px;">'+
-		'<button id="popup_alert" type="button" class="close" ' + 
-		'data-dismiss="alert" aria-hidden="true">' + 
-		'&times;' + 
-		'</button>' + 
-		'<strong>' + message + '</strong><br />' +
-		'</div>');
-	}
-
-	function alertSuccess(message) {
-	$('#page').after(
-		'<div class="alert alert-success alert-dismissable fade in" style="position: fixed; right: 50px; top: 50px;">'+
-		'<button id="popup_alert" type="button" class="close" ' + 
-		'data-dismiss="alert" aria-hidden="true">' + 
-		'&times;' + 
-		'</button>' + 
-		'<strong>' + message + '</strong><br />' +
-		'</div>');
-	}
 </script>

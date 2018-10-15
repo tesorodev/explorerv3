@@ -26,23 +26,49 @@
 	    </fieldset>
 	</form>
 </div>
+
+<div class="well bs-component">
+	<form class="form-horizontal" id="paper_wallet_form">
+	    <fieldset>
+			<div class="col-md-12">
+				<div class="form-group">
+					<label>Generate a Paper Wallet</label>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="form-group">
+					<button class="btn btn-default" type="button" id="generate_paper_wallet">
+						<span class="fa fa-search"></span> Generate
+					</button>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="form-group">
+					<div id="paperwallet_result">
+					</div>
+				</div>
+			</div>
+	    </fieldset>
+	</form>
+</div>
+
 <script src="/js/cn_helper.js"></script>
+<script src="/js/paperwallet.js"></script>
 <script>
 	var publicAddress = $("#public_address");
 
     currentPage = {
         destroy: function(){
-			$("#popup_alert").click(); 
         },
         init: function(){
+			$("#paperwallet_result").hide(); 
         },
         update: function(){
         }
 	};
 
-	$("#validate_address").click(function() {
-		$("#popup_alert").click(); 
-
+	$("#validate_address").click(function()
+	{
 		if(!publicAddress.val()) {
 			alertError("Fill all fields!");
 			return;
@@ -51,7 +77,7 @@
 		var a = publicAddress.val();
 
 		try {
-			var res = decode_address(a);
+			var res = decodeAddress(a);
 			if (!res)
 				alertError('Could not decode address');
 			else
@@ -71,26 +97,68 @@
 			alertError("Could not decode address:<br />" + e);
 		}
 	});
-	
-	function alertError(message) {
-	$('#page').after(
-		'<div class="alert alert-danger alert-dismissable fade in" style="position: fixed; right: 50px; top: 50px;">'+
-		'<button id="popup_alert" type="button" class="close" ' + 
-		'data-dismiss="alert" aria-hidden="true">' + 
-		'&times;' + 
-		'</button>' + 
-		'<strong>' + message + '</strong><br />' +
-		'</div>');
-	}
 
-	function alertSuccess(message) {
-	$('#page').after(
-		'<div class="alert alert-success alert-dismissable fade in" style="position: fixed; right: 50px; top: 50px;">'+
-		'<button id="popup_alert" type="button" class="close" ' + 
-		'data-dismiss="alert" aria-hidden="true">' + 
-		'&times;' + 
-		'</button>' + 
-		'<strong>' + message + '</strong><br />' +
-		'</div>');
+	$("#generate_paper_wallet").click(function()
+	{
+		var seed = scReduce32(rand32());
+		var keys = createAddress(seed);
+		var mnemonic = mn_encode(seed, "english");
+
+		$("#paperwallet_result").empty();
+
+		$("#paperwallet_result").append(
+			'<div><br/>' +
+				'<strong>Address</strong><br/>' +
+				'<p>' + keys.address + '</p>' +
+				'<strong>Mnemonic Seed</strong><br/>' +
+				'<p>' + mnemonic + '</p>' +
+				'<strong>View Keys</strong><br/>' +
+				'<p>Public: ' + keys.view.pub + '</p>' +
+				'<p>Secret: ' + keys.view.sec + '</p>' +
+				'<strong>Spend Keys</strong><br/>' +
+				'<p>Public: ' + keys.spend.pub + '</p>' +
+				'<p>Secret: ' + keys.spend.sec + '</p>' +
+			'</div>'
+
+		);
+
+		$("#paperwallet_result").show();
+	});
+
+	function createAddress(seed)
+	{
+        var first = cnFastHash(seed);
+		var second = cnFastHash(first);
+
+		var spend = generateKeys(first);
+		var view = generateKeys(second);
+		var address = pubkeysToString(spend.pub, view.pub);
+		
+        return {
+			spend: spend,
+			view: view,
+			address: address
+		};
 	}
+	
+	function generateKeys(seed)
+	{
+		if (seed.length !== 64) throw "generateKeys: Invalid seed input length!";
+		
+		var sec = scReduce32(seed);
+		var pub = secKeyToPub(sec);
+		
+        return {
+            sec: sec,
+            pub: pub
+        };
+	}
+	
+	function pubkeysToString(spend, view)
+	{
+        var prefix = encodeVarint(CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
+        var data = prefix + spend + view;
+        var checksum = cnFastHash(data);
+        return cnBase58.encode(data + checksum.slice(0, ADDRESS_CHECKSUM_SIZE * 2));
+    }
 </script>
