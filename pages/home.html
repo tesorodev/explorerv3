@@ -488,7 +488,7 @@ function getPoolTransactions()
         cache: 'false',
         success: function (data)
         {
-            var json = JSON.parse(data);
+            var json = data;
             var transactions = json.transactions;
 
             if (transactions)
