@@ -27,7 +27,7 @@
 	</form>
 </div>
 
-<!--<div class="well bs-component">
+<div class="well bs-component">
 	<form class="form-horizontal" id="paper_wallet_form">
 	    <fieldset>
 			<div class="col-md-12">
@@ -50,21 +50,21 @@
 			</div>
 	    </fieldset>
 	</form>
-</div>-->
+</div>
 
-<script src="./js/cn_helper.js"></script>
-<script src="./js/paperwallet.js"></script>
+<script src="./js/paperwallet/languages.js"></script>
+<script src="./js/paperwallet/paperwallet.js"></script>
 <script>
 	var publicAddress = $("#public_address");
 
-    currentPage = {
-        destroy: function(){
-        },
-        init: function(){
+	currentPage = {
+		destroy: function(){
+		},
+		init: function(){
 			$("#paperwallet_result").hide(); 
-        },
-        update: function(){
-        }
+		},
+		update: function(){
+		}
 	};
 
 	$("#validate_address").click(function()
@@ -77,7 +77,7 @@
 		var a = publicAddress.val();
 
 		try {
-			var res = decodeAddress(a);
+			var res = cnUtil.decode_address_full(a);
 			if (!res)
 				alertError('Could not decode address');
 			else
@@ -87,7 +87,7 @@
 				'View:' + res.view + '<br />' +
 				'Spend:' + res.spend;
 
-				if (res.type.address_type == address_type.integrated)
+				if (res.type.address_type == "Integrated")
 					msg += '<br />PayID:' + res.intPaymentId;
 
 				alertSuccess(msg);
@@ -100,8 +100,8 @@
 
 	$("#generate_paper_wallet").click(function()
 	{
-		var seed = scReduce32(rand32());
-		var keys = createAddress(seed);
+		seed = cnUtil.sc_reduce32(cnUtil.rand_32());
+		keys = cnUtil.create_address(seed);
 		var mnemonic = mn_encode(seed, "english");
 
 		$("#paperwallet_result").empty();
@@ -109,7 +109,7 @@
 		$("#paperwallet_result").append(
 			'<div><br/>' +
 				'<strong>Address</strong><br/>' +
-				'<p>' + keys.address + '</p>' +
+				'<p>' + cnUtil.pubkeys_to_string(keys.spend.pub, keys.view.pub) + '</p>' +
 				'<strong>Mnemonic Seed</strong><br/>' +
 				'<p>' + mnemonic + '</p>' +
 				'<strong>View Keys</strong><br/>' +
@@ -118,47 +118,11 @@
 				'<strong>Spend Keys</strong><br/>' +
 				'<p>Public: ' + keys.spend.pub + '</p>' +
 				'<p>Secret: ' + keys.spend.sec + '</p>' +
+				'<p class="alert-danger">NOTICE: Please be sure to verify the paper wallet before transferring funds. Funds cannot be recovered if the paper wallet is incorrect.</p>' +
 			'</div>'
 
 		);
 
 		$("#paperwallet_result").show();
 	});
-
-	function createAddress(seed)
-	{
-        var first = cnFastHash(seed);
-		var second = cnFastHash(first);
-
-		var spend = generateKeys(first);
-		var view = generateKeys(second);
-		var address = pubkeysToString(spend.pub, view.pub);
-		
-        return {
-			spend: spend,
-			view: view,
-			address: address
-		};
-	}
-	
-	function generateKeys(seed)
-	{
-		if (seed.length !== 64) throw "generateKeys: Invalid seed input length!";
-		
-		var sec = scReduce32(seed);
-		var pub = secKeyToPub(sec);
-		
-        return {
-            sec: sec,
-            pub: pub
-        };
-	}
-	
-	function pubkeysToString(spend, view)
-	{
-        var prefix = encodeVarint(CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
-        var data = prefix + spend + view;
-        var checksum = cnFastHash(data);
-        return cnBase58.encode(data + checksum.slice(0, ADDRESS_CHECKSUM_SIZE * 2));
-    }
 </script>
