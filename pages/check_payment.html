@@ -193,7 +193,7 @@
 						{
 							var a = publicAddress.val().trim();
 							var pk = privateKey.val().trim();
-							var da = decodeAddress(a);
+							var da = decode_address(a);
 
 							var add_tx_pub_keys = data3.result.additional;
 							var multiple_tx_pvt_keys = [];
@@ -209,7 +209,7 @@
                 });
              }
         });
-    }
+	}
 	
 	function renderTransaction(txHash, txExtra, txPubKey, transaction, block, decodedOuts)
     {
