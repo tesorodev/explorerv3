@@ -75,7 +75,7 @@
 		var a = publicAddress.val();
 
 		try {
-			var res = cnUtil.decode_address(a);
+			var res = decode_address(a);
 			if (!res)
 				alertError('Could not decode address');
 			else
