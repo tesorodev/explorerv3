@@ -18,6 +18,8 @@
 	<script src="./js/config.js"></script>
 	<script src="./js/paperwallet/languages.js"></script>
 	<script src="./js/paperwallet/paperwallet.js"></script>
+	<script src="./js/nacl-fast-cn.js"></script>
+	<script src="./js/cn_helper.js"></script>
 </head>
 <body>
 <script>
@@ -160,11 +162,13 @@
 			case 0:
 				return "No RingCT";
 			case 1:
-				return "Basic RingCT";
+				return "Full RingCT";
 			case 2:
-				return "Standard RingCT";
+				return "Simple RingCT";
+			case 3:
+				return "Full Bulletproof v1";
 			case 4:
-				return "Bulletproof v1";
+				return "Simple Bulletproof v1";
 			case 5:
 				return "Bulletproof v2";
 		}
