@@ -171,19 +171,15 @@ currentPage = {
         if (xhrGetBlocks) xhrGetBlocks.abort();
     },
     init: function () {
-        $.when(
-            renderInitialBlocks()
-        ).then(function () {
-            setTimeout(function () {
-                $.when(
-                    displayDiffChart()
-                ).then(function () {
-                    setTimeout(function () {
-                        refreshChart();
-                    }, 100)
-                });
-            }, 500)
-        });
+        setTimeout(function () {
+            $.when(
+                displayDiffChart()
+            ).then(function () {
+                setTimeout(function () {
+                    refreshChart();
+                }, 100)
+            });
+        }, 500)
     },
     update: function () {
         renderLastBlock();
@@ -673,4 +669,5 @@ $('#goto-height').keyup(function (e) {
     if (e.keyCode === 13)
 		gotoHeightGo_Click();
 });
+//# sourceURL=./pages/home.html
 </script>
