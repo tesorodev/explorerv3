@@ -1621,16 +1621,6 @@ var nervaConfig = {
     subAddressPrefix: 0x1080,
 };
 
-var slateConfig = {
-    coinUnitPlaces: 9,
-    coinSymbol: 'XSL',
-    coinName: 'Slate',
-    coinUriPrefix: 'slate:',
-    addressPrefix: 0x3697,
-    integratedAddressPrefix: 0x6599,
-    subAddressPrefix: 0x5c1a,
-};
-
 var cnUtilGen = function(initConfig) {
     //var config = $.extend({}, initConfig);
     var config = initConfig;
@@ -1823,6 +1813,27 @@ var cnUtilGen = function(initConfig) {
         keys.public_addr = this.pubkeys_to_string(keys.spend.pub, keys.view.pub);
         return keys;
     };
+
+    this.create_integrated_address = function(payId, addr) {
+        var prefix = this.encode_varint(CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX);
+        var a = decode_address(addr);
+
+        var data = prefix + a.spend + a.view + payId;
+
+        var hash = this.cn_fast_hash(data);
+        var hex = data + hash.slice(0, 8);
+        var base58 = cnBase58.encode(hex);
+
+        return {
+            address: base58,
+            paymentId: payId
+        };
+    }
+
+    this.create_integrated_address_rand = function(stdAddr) {
+        id = mn_random(64);
+        return create_integrated_address(id, stdAddr);
+    }
 
     this.get_address_type = function(address)
     {

@@ -13,13 +13,33 @@
 			<div class="col-md-12">
 				<div class="form-group">
 					<label for="public_address">Validate Address</label>
-					<input class="form-control" placeholder="NERVA address to validate" id="public_address">
+					<input class="form-control" placeholder="NERVA address to validate" id="validate_public_address">
 				</div>
 			</div>
 			<div class="col-md-12">
 				<div class="form-group">
 					<button class="btn btn-default" type="button" id="validate_address">
 						<span class="fa fa-search"></span> Validate
+					</button>
+				</div>
+			</div>
+	    </fieldset>
+	</form>
+</div>
+
+<div class="well bs-component">
+	<form class="form-horizontal" id="create_integrated_address_form">
+	    <fieldset>
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="public_address">Create Integrated Address</label>
+					<input class="form-control" placeholder="NERVA address" id="integrated_public_address">
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="form-group">
+					<button class="btn btn-default" type="button" id="create_int_addr">
+						<span class="fa fa-search"></span> Create
 					</button>
 				</div>
 			</div>
@@ -53,8 +73,6 @@
 </div>
 
 <script>
-	var publicAddress = $("#public_address");
-
 	currentPage = {
 		destroy: function(){
 		},
@@ -65,8 +83,33 @@
 		}
 	};
 
+	$("#create_int_addr").click(function()
+	{
+		var publicAddress = $("#integrated_public_address");
+
+		if(!publicAddress.val()) {
+			alertError("Fill all fields!");
+			return;
+		}
+
+		var a = publicAddress.val();
+		try{
+			var res = create_integrated_address_rand(a);
+			var msg = 'Address Created!<br />' +
+				'Address:' + res.address + '<br />' +
+				'Payment ID:' + res.paymentId
+
+				alertSuccess(msg);
+		}
+		catch (e) {
+			alertError("Could not create address:<br />" + e);
+		}
+	});
+
 	$("#validate_address").click(function()
 	{
+		var publicAddress = $("#validate_public_address");
+
 		if(!publicAddress.val()) {
 			alertError("Fill all fields!");
 			return;
