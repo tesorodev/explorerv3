@@ -1,4 +1,4 @@
-// Copyright (c) 2018, The NERVA Project
+// Copyright (c) 2018, The TESORO Project
 // Copyright (c) 2014-2017, MyMonero.com
 
 // Based on cn_util.js

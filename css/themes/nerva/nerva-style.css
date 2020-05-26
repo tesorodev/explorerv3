@@ -1,4 +1,4 @@
-@import url("nerva-bootstrap.css");
+@import url("tesoro-bootstrap.css");
 
 #coinName
 {
@@ -32,7 +32,7 @@
             margin-top: 60px;
         }
 		
-        .nerva-api-links {		
+        .tesoro-api-links {		
            padding: 30px;
            background: #fff;
            border-radius: 4px;

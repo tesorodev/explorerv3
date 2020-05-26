@@ -1613,12 +1613,12 @@ return{_strlen:lb,_ge_mul8:Va,_keccak:db,_ge_scalarmult:Ta,_ge_fromfe_frombytes_
 
 var nervaConfig = {
     coinUnitPlaces: 12,
-    coinSymbol: 'XNV',
-    coinName: 'NERVA',
-    coinUriPrefix: 'nerva:',
-    addressPrefix: 0x3800,
-    integratedAddressPrefix: 0x7081,
-    subAddressPrefix: 0x1080,
+    coinSymbol: 'TSX',
+    coinName: 'TESORO',
+    coinUriPrefix: 'tesoro:',
+    addressPrefix: 18,
+    integratedAddressPrefix: 19,
+    subAddressPrefix: 42,
 };
 
 var cnUtilGen = function(initConfig) {
