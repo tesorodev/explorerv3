@@ -89,24 +89,13 @@
 
     function getTransactionData(tx)
     {
-        var txExtra = "";
-        for (var i = 0; i < tx.json.extra.length; i++)
-            txExtra += tx.json.extra[i].toString(16).padStart(2, '0');
-
+        renderTransaction('', '', tx);
         $.ajax({
-            url: './api/gettxpubkey.php?extra=' + txExtra,
+            url: './api/getblockheaderbyheight.php?height=' + tx.block_height,
             dataType: 'json',
             cache: 'false',
-            success: function(data3){
-                renderTransaction(txExtra, data3.result.pubkey, tx);
-                $.ajax({
-                    url: './api/getblockheaderbyheight.php?height=' + tx.block_height,
-                    dataType: 'json',
-                    cache: 'false',
-                    success: function(data2) {
-                        renderTransactionBlockData(data2.result.block_header);
-                    }
-                });
+            success: function(data2) {
+                renderTransactionBlockData(data2.result.block_header);
             }
         });
     }
